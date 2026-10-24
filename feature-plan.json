@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "current_feature": "core-skeleton",
+  "features": [
+    {
+      "id": "core-skeleton",
+      "title": "FastAPI/React skeleton with health endpoint",
+      "status": "done",
+      "acceptance": [
+        "Backend starts on port 8000 with /health endpoint returning JSON",
+        "Frontend builds with Vite and serves on port 5173",
+        "Docker Compose brings up backend + frontend + Keycloak",
+        "Backend pytest passes, frontend npm test passes"
+      ],
+      "implementation": [
+        "backend/app/main.py",
+        "backend/app/api/health.py",
+        "backend/requirements.txt",
+        "backend/Dockerfile",
+        "frontend/package.json",
+        "frontend/src/main.tsx",
+        "frontend/src/App.tsx",
+        "frontend/vite.config.ts",
+        "docker-compose.yaml",
+        ".env.example",
+        "backend/app/core/config.py",
+        "backend/app/core/database.py",
+        "backend/pyproject.toml",
+        "frontend/tsconfig.json",
+        "frontend/tsconfig.node.json",
+        "frontend/index.html",
+        "frontend/src/index.css",
+        "frontend/nginx.conf",
+        "frontend/Dockerfile",
+        "frontend/vitest.config.ts",
+        "frontend/src/__tests__/setup.ts"
+      ],
+      "tests": [
+        "backend/tests/test_health.py",
+        "frontend/src/__tests__/App.test.tsx"
+      ]
+    },
+    {
+      "id": "agent-workflow-engine",
+      "title": "Agent workflow orchestration engine",
+      "status": "planned",
+      "acceptance": [
+        "POST /api/workflows creates a workflow run with provider-qualified reviewers",
+        "GET /api/workflows/{id} returns status and collected reviews",
+        "Cross-provider dispatch: claude -> codex exec, codex -> claude -p",
+        "Incomplete verdict when any reviewer fails"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "hook-effectiveness-analyzer",
+      "title": "Hook effectiveness measurement from transcripts",
+      "status": "planned",
+      "acceptance": [
+        "Ingest local transcript logs (JSONL)",
+        "Compute opens per 100 prompts for main vs subagent",
+        "Compare before/after hook changes"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "oidc-auth",
+      "title": "OIDC Keycloak authentication with SPA PKCE",
+      "status": "planned",
+      "acceptance": [
+        "Login redirects to Keycloak, callback exchanges code for tokens",
+        "Tokens kept in memory (sessionStorage for verifier/state)",
+        "Bearer-only API with role-based authorization",
+        "Logout clears session"
+      ],
+      "implementation": [],
+      "tests": []
+    }
+  ]
+}
