@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "signal-lens-144-ryan-vo",
+  "owner": "A220man",
+  "email": "ryandtvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "summary": "Work in progress: signal-lens-144-ryan-vo",
+  "workflows": [
+    "Cross-provider interrogate: dispatch reviewers to claude -p and codex exec CLIs, synthesize verdict",
+    "Hook effectiveness analysis: ingest transcript logs, compute opens-per-100-prompts by session type",
+    "Agent workflow orchestration: define multi-step workflows with typed inputs, persistence, audit log"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "status": "work-in-progress"
+}
