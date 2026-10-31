@@ -22,5 +22,10 @@
     "vite": "^5.3.4",
     "vitest": "^2.0.5",
     "jsdom": "^24.1.1"
+  },
+  "author": {
+    "name": "Ryan Vo",
+    "email": "ryandtvo@gmail.com",
+    "url": "https://github.com/A220man"
   }
 }
