@@ -1,7 +1,7 @@
 import asyncio
 import subprocess
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
@@ -39,7 +39,7 @@ workflow_store_instance = InMemoryWorkflowStore()
 
 async def execute_review(review: Review) -> Review:
     """Execute a single review using the appropriate provider CLI."""
-    review.started_at = datetime.utcnow()
+    review.started_at = datetime.now(timezone.utc)
     review.status = ReviewStatus.COMPLETED
 
     provider = review.reviewer.provider
@@ -78,7 +78,7 @@ async def execute_review(review: Review) -> Review:
         review.status = ReviewStatus.FAILED
         review.error = str(e)
 
-    review.completed_at = datetime.utcnow()
+    review.completed_at = datetime.now(timezone.utc)
     return review
 
 
@@ -99,7 +99,7 @@ async def execute_workflow(workflow: WorkflowRun) -> None:
             review = reviews[i]
             review.status = ReviewStatus.FAILED
             review.error = str(result)
-            review.completed_at = datetime.utcnow()
+            review.completed_at = datetime.now(timezone.utc)
             final_reviews.append(review)
         else:
             final_reviews.append(result)
@@ -112,8 +112,8 @@ async def execute_workflow(workflow: WorkflowRun) -> None:
         workflow.status = WorkflowStatus.COMPLETED
 
     workflow.reviews = final_reviews
-    workflow.updated_at = datetime.utcnow()
-    workflow.completed_at = datetime.utcnow()
+    workflow.updated_at = datetime.now(timezone.utc)
+    workflow.completed_at = datetime.now(timezone.utc)
 
     workflow_store_instance.update(workflow)
 
