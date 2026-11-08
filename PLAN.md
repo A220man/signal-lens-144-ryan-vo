@@ -24,13 +24,17 @@ Tests: `backend/tests/test_health.py`, `frontend/src/__tests__/App.test.tsx`
 
 ### agent-workflow-engine — Agent workflow orchestration engine
 
-Status: planned
+Status: done
 
 Acceptance:
 - POST /api/workflows creates a workflow run with provider-qualified reviewers
 - GET /api/workflows/{id} returns status and collected reviews
 - Cross-provider dispatch: claude -> codex exec, codex -> claude -p
 - Incomplete verdict when any reviewer fails
+
+Implementation: `backend/app/api/workflows.py`, `backend/app/models/workflow.py`, `backend/app/services/workflow.py`, `backend/tests/test_workflows.py`
+
+Tests: `backend/tests/test_workflows.py`
 
 ### hook-effectiveness-analyzer — Hook effectiveness measurement from transcripts
 
