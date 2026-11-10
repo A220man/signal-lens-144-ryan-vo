@@ -5,7 +5,7 @@ from typing import Optional
 class Settings(BaseSettings):
     # Application
     APP_NAME: str = "signal-lens-144-ryan-vo"
-    APP_VERSION: str = "1.0.0"
+    APP_VERSION: str = "1.3.0"
     DEBUG: bool = False
 
     # Database
