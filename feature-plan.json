@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_feature": "core-skeleton",
+  "current_feature": "hook-effectiveness-analyzer",
   "features": [
     {
       "id": "core-skeleton",
@@ -62,15 +62,21 @@
     },
     {
       "id": "hook-effectiveness-analyzer",
+      "status": "in_progress",
       "title": "Hook effectiveness measurement from transcripts",
-      "status": "planned",
       "acceptance": [
         "Ingest local transcript logs (JSONL)",
         "Compute opens per 100 prompts for main vs subagent",
         "Compare before/after hook changes"
       ],
-      "implementation": [],
-      "tests": []
+      "implementation": [
+        "backend/app/api/hooks.py",
+        "backend/app/models/transcript.py"
+      ],
+      "tests": [
+        "backend/tests/test_hooks_ingest.py",
+        "backend/tests/test_hooks_effectiveness.py"
+      ]
     },
     {
       "id": "oidc-auth",
