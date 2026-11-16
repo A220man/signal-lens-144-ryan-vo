@@ -4,7 +4,7 @@ Each round completes one feature or repair. Future items are planned, not implem
 
 ## Current round
 
-core-skeleton
+hook-effectiveness-analyzer
 
 ## Roadmap
 
@@ -38,12 +38,16 @@ Tests: `backend/tests/test_workflows.py`
 
 ### hook-effectiveness-analyzer — Hook effectiveness measurement from transcripts
 
-Status: planned
+Status: in_progress
 
 Acceptance:
 - Ingest local transcript logs (JSONL)
 - Compute opens per 100 prompts for main vs subagent
 - Compare before/after hook changes
+
+Implementation: `backend/app/api/hooks.py`, `backend/app/models/transcript.py`
+
+Tests: `backend/tests/test_hooks_ingest.py`, `backend/tests/test_hooks_effectiveness.py`
 
 ### oidc-auth — OIDC Keycloak authentication with SPA PKCE
 
