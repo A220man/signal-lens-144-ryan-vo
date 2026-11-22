@@ -1,6 +1,6 @@
 {
   "name": "signal-lens-144-ryan-vo",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

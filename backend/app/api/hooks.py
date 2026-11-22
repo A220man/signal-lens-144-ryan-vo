@@ -42,6 +42,64 @@ def reset_hook_store():
     _metrics_store = []
 
 
+def compare_metrics(
+    before: List[OpensMetrics], after: List[OpensMetrics]
+) -> dict:
+    """Compute before/after delta for hook effectiveness metrics.
+    
+    Returns dict mapping session_type to dict of field deltas.
+    Only includes fields that changed (non-zero delta).
+    Numeric fields: total_prompts, open_count, opens_per_100, router_count,
+    playbook_count, principle_count. session_type is excluded from delta.
+    """
+    numeric_fields = ["total_prompts", "open_count", "opens_per_100",
+                      "router_count", "playbook_count", "principle_count"]
+    
+    delta: dict[str, dict[str, float | int]] = {}
+    
+    # Track which session types appear in before
+    before_types = {m.session_type for m in before}
+    
+    # Build a lookup from after by session_type
+    after_by_type: dict[str, OpensMetrics] = {}
+    for m in after:
+        after_by_type[m.session_type] = m
+    
+    # Process each session type that appears in either before or after
+    all_types = before_types | {m.session_type for m in after}
+    
+    for st in all_types:
+        changes: dict[str, float | int] = {}
+        
+        before_m = next((m for m in before if m.session_type == st), None)
+        after_m = after_by_type.get(st)
+        
+        if before_m is None:
+            # Session type is new (only in after) - diff = after - 0 = after values
+            for field in numeric_fields:
+                if field in after_m.model_fields:
+                    changes[field] = getattr(after_m, field)
+        elif after_m is None:
+            # Session type disappeared (only in before) - diff = 0 - before = -before values
+            for field in numeric_fields:
+                if field in before_m.model_fields:
+                    changes[field] = -getattr(before_m, field)
+        else:
+            # Session type in both before and after - compute diffs
+            for field in numeric_fields:
+                if field in before_m.model_fields and field in after_m.model_fields:
+                    before_val = getattr(before_m, field)
+                    after_val = getattr(after_m, field)
+                    diff = after_val - before_val
+                    if diff != 0:
+                        changes[field] = diff
+        
+        if changes:
+            delta[st] = changes
+    
+    return delta
+
+
 router = APIRouter(prefix="/hooks", tags=["hooks"])
 
 
@@ -113,3 +171,5 @@ async def compute_metrics():
         ))
     
     _metrics_store = results
+
+
