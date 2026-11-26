@@ -1,6 +1,14 @@
 # Changelog
 
+## 1.7.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.6.0 — work-in-progress checkpoint
+
+- **Added**: Local transcript JSONL upload endpoint `POST /api/hooks/ingest-file`.
+- **Added**: Targeted synthetic JSONL ingest test with blank-line handling.
+- **Known issues**: hook-effectiveness-analyzer remains in_progress; see STATUS.md.
 
 Partial code published for continued development. Known issues: STATUS.md.
 

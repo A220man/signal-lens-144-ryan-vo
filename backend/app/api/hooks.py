@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
@@ -101,6 +101,33 @@ def compare_metrics(
 
 
 router = APIRouter(prefix="/hooks", tags=["hooks"])
+
+
+@router.post("/ingest-file", status_code=202, summary="Ingest local transcript JSONL files")
+async def ingest_transcript_file(file: UploadFile = File(...)):
+    """Accept a local transcript JSONL upload, ignoring blank lines."""
+    raw = await file.read()
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(status_code=400, detail="Transcript file must be UTF-8") from exc
+
+    entries: List[TranscriptEntry] = []
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            entries.append(TranscriptEntry.model_validate_json(line))
+        except Exception as exc:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid JSONL entry on line {line_number}",
+            ) from exc
+
+    global _transcript_store
+    _transcript_store.extend(entries)
+    await compute_metrics()
+    return {"status": "accepted", "entries_ingested": len(entries)}
 
 
 @router.post("/ingest", status_code=202, summary="Ingest transcript logs (JSONL)")
