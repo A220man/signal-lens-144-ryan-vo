@@ -54,3 +54,24 @@ async def test_ingest_transcript_empty():
         data = response.json()
         assert data["status"] == "accepted"
         assert data["entries_ingested"] == 0
+
+
+@pytest.mark.asyncio
+async def test_ingest_local_jsonl_file():
+    """Test ingesting a local transcript JSONL upload with blank lines."""
+    transcript = b'{"prompt_id":"file-1","session_type":"main","event_type":"open"}\n\n{"prompt_id":"file-2","session_type":"subagent","event_type":"router"}\n'
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post(
+            "/api/hooks/ingest-file",
+            files={"file": ("transcript.jsonl", transcript, "application/x-ndjson")},
+        )
+        assert response.status_code == 202
+        assert response.json() == {"status": "accepted", "entries_ingested": 2}
+
+        metrics = await client.get("/api/hooks/effectiveness")
+        assert metrics.status_code == 200
+        by_type = {item["session_type"]: item for item in metrics.json()}
+        assert by_type["main"]["total_prompts"] == 1
+        assert by_type["main"]["opens_per_100"] == 100.0
+        assert by_type["subagent"]["router_count"] == 1
